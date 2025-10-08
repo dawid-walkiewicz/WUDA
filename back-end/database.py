@@ -5,17 +5,22 @@ from models import Game
 from logger import LOGGER
 
 engine = create_engine(DATABASE_URL, echo=True, future=True)
-SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+SessionLocal = scoped_session(
+    sessionmaker(autocommit=False, autoflush=False, bind=engine)
+)
 
 
 def init_db():
     import models
+
     # importujemy modele, żeby Base je zarejestrowało
     try:
         models.Base.metadata.create_all(bind=engine)
         load_data()
     except:
-        LOGGER.error("Database did not manage to connect. Endpoints besides liveness will not work")
+        LOGGER.error(
+            "Database did not manage to connect. Endpoints besides liveness will not work"
+        )
 
 
 def check_database():
@@ -30,8 +35,9 @@ def check_database():
 def load_data():
     session = SessionLocal()
     if session.query(Game).count() == 0:
-        session.execute(text(
-            """
+        session.execute(
+            text(
+                """
             INSERT INTO games (title, players, playtime, short_description, description, image_url)
             VALUES ('Catan', '3-4', 90, 'Klasyczna gra o osadnictwie.',
                     'Gracze rywalizują o zasoby i rozwój osad na wyspie Catan.',
@@ -49,7 +55,8 @@ def load_data():
                     'Gracze kupują karty i rozwijają swoje kolekcje klejnotów, zdobywając punkty.',
                     'https://files.rebel.pl/products/100/606/_2022998/rebel-gra-ekonomiczna-splendor-2024-box3d-1200x900-ffffff-png.webp');
             """
-        ))
+            )
+        )
         session.commit()
         session.close()
         LOGGER.error("Preloaded database")

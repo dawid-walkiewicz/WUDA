@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 api = Api(app)
-app.config['JWT_SECRET_KEY'] = JWT_KEY
+app.config["JWT_SECRET_KEY"] = JWT_KEY
 jwt = JWTManager(app)
 
 init_db()
@@ -33,7 +33,7 @@ api.add_resource(LoginUser, "/auth/login")
 api.add_resource(PostList, "/posts")
 api.add_resource(PostDetails, "/posts/<int:post_id>")  # GET szczegóły posta
 api.add_resource(PostComments, "/posts/<int:post_id>/comments")
-api.add_resource(GameList, "/games", '/games/<int:game_id>')
+api.add_resource(GameList, "/games", "/games/<int:game_id>")
 api.add_resource(Liveness, "/liveness")
 api.add_resource(Readiness, "/readiness")
 
