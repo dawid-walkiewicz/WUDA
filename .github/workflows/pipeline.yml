@@ -1,0 +1,32 @@
+name: pipeline
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Linting Tools
+        run: pip install flake8 black
+
+      - name: Lint Back-End
+        run: flake8 back-end/
+
+      - name: Lint Front-End
+        run: flake8 front-end/
+
+      - name: Code Formatting
+        run: black --check back-end/ front-end/

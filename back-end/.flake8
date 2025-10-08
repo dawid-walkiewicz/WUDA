@@ -1,0 +1,9 @@
+[flake8]
+ignore = E501, W503
+
+exclude =
+    .env,
+    app_errors.log,
+    Dockerfile,
+    requirements.txt,
+    requirements_test.txt,
