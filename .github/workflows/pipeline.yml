@@ -1,0 +1,38 @@
+name: pipeline
+on:
+  pull_request:
+
+  push:
+    branches:
+      - master
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Linting Tools
+        run: pip install flake8 black
+
+      - name: Lint Back-End
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          workdir: 'back-end/'
+
+      - name: Lint Front-End
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          workdir: 'front-end/'
+
+      - name: Code Formatting
+        run: black --check back-end/ front-end/
