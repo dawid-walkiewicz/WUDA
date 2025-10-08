@@ -37,10 +37,9 @@ jobs:
       - name: Code Formatting
         run: black --check back-end/ front-end/
 
-  testing:
+  testing_backend:
     runs-on: ubuntu-latest
-    name: Test
-    needs: linting
+    name: Back-End Test
 
     steps:
       - name: Checkout code
@@ -51,14 +50,30 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: pip install -r back-end/requirements.txt -r front-end/requirements.txt
+      - name: Install Dependencies
+        run: pip install -r back-end/requirements.txt
 
-      - name: Install Back-End Test Dependencies
+      - name: Install Test Dependencies
         run: pip install -r back-end/requirements_test.txt
 
       - name: Run Back-End Tests
         run: pytest -v back-end/test_app.py
+
+  testing_frontend:
+    runs-on: ubuntu-latest
+    name: Front-End Test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install -r front-end/requirements.txt
 
       - name: Install Front-End Test Dependencies
         run: pip install -r front-end/requirements_test.txt
