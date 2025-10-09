@@ -5,11 +5,15 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'back-end/**'
+      - 'front-end/**'
+      - '.github/**'
 
 jobs:
-  linting:
+  backend:
     runs-on: ubuntu-latest
-    name: Lint
+    name: Back-End
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,33 +26,14 @@ jobs:
       - name: Install Linting Tools
         run: pip install flake8 black
 
-      - name: Lint Back-End
+      - name: Lint
         uses: reviewdog/action-flake8@v3
         with:
           github_token: '${{ secrets.GITHUB_TOKEN }}'
           workdir: 'back-end/'
 
-      - name: Lint Front-End
-        uses: reviewdog/action-flake8@v3
-        with:
-          github_token: '${{ secrets.GITHUB_TOKEN }}'
-          workdir: 'front-end/'
-
       - name: Code Formatting
-        run: black --check back-end/ front-end/
-
-  testing_backend:
-    runs-on: ubuntu-latest
-    name: Back-End Test
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+        run: black --check back-end/
 
       - name: Install Dependencies
         run: pip install -r back-end/requirements.txt
@@ -59,10 +44,9 @@ jobs:
       - name: Run Back-End Tests
         run: pytest -v back-end/test_app.py
 
-  testing_frontend:
+  frontend:
     runs-on: ubuntu-latest
-    name: Front-End Test
-
+    name: Front-End
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -71,6 +55,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+
+      - name: Install Linting Tools
+        run: pip install flake8 black
+
+      - name: Lint
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          workdir: 'front-end/'
+
+      - name: Code Formatting
+        run: black --check front-end/
 
       - name: Install Dependencies
         run: pip install -r front-end/requirements.txt
