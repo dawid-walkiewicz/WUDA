@@ -1,6 +1,10 @@
 name: pipeline
 on:
   pull_request:
+    paths:
+      - 'back-end/**'
+      - 'front-end/**'
+      - '.github/**'
 
   push:
     branches:
