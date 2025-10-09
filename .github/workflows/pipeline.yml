@@ -1,15 +1,23 @@
 name: pipeline
 on:
   pull_request:
+    paths:
+      - 'back-end/**'
+      - 'front-end/**'
+      - '.github/**'
 
   push:
     branches:
       - master
+    paths:
+      - 'back-end/**'
+      - 'front-end/**'
+      - '.github/**'
 
 jobs:
-  linting:
+  backend:
     runs-on: ubuntu-latest
-    name: Lint
+    name: Back-End
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,17 +30,60 @@ jobs:
       - name: Install Linting Tools
         run: pip install flake8 black
 
-      - name: Lint Back-End
+      - name: Lint
         uses: reviewdog/action-flake8@v3
         with:
           github_token: '${{ secrets.GITHUB_TOKEN }}'
           workdir: 'back-end/'
 
-      - name: Lint Front-End
+      - name: Code Formatting
+        run: black --check back-end/
+
+      - name: Install Dependencies
+        run: pip install -r back-end/requirements.txt
+
+      - name: Install Test Dependencies
+        run: pip install -r back-end/requirements_test.txt
+
+      - name: Run Back-End Tests
+        env:
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: pytest -v back-end/test_app.py
+
+  frontend:
+    runs-on: ubuntu-latest
+    name: Front-End
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Linting Tools
+        run: pip install flake8 black
+
+      - name: Lint
         uses: reviewdog/action-flake8@v3
         with:
           github_token: '${{ secrets.GITHUB_TOKEN }}'
           workdir: 'front-end/'
 
       - name: Code Formatting
-        run: black --check back-end/ front-end/
+        run: black --check front-end/
+
+      - name: Install Dependencies
+        run: pip install -r front-end/requirements.txt
+
+      - name: Install Front-End Test Dependencies
+        run: pip install -r front-end/requirements_test.txt
+
+      - name: Run Front-End Tests
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: pytest -v front-end/test_app.py
