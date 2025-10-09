@@ -42,6 +42,8 @@ jobs:
         run: pip install -r back-end/requirements_test.txt
 
       - name: Run Back-End Tests
+        env:
+          JWT_KEY: ${{ secrets.JWT_KEY }}
         run: pytest -v back-end/test_app.py
 
   frontend:
@@ -75,4 +77,6 @@ jobs:
         run: pip install -r front-end/requirements_test.txt
 
       - name: Run Front-End Tests
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: pytest -v front-end/test_app.py
