@@ -7,3 +7,37 @@ services:
       POSTGRES_DB: games
     ports:
       - 5432:5432
+
+  backend:
+    build:
+      context: ./back-end
+
+    container_name: backend_app
+
+    env_file:
+      - back-end/.env
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      postgres:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./front-end
+
+    container_name: frontend_app
+
+    env_file:
+      - front-end/.env
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      backend:
+        condition: service_started
+
+#    restart: on-failure:3
