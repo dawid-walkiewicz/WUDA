@@ -87,3 +87,22 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: pytest -v front-end/test_app.py
+
+  docker:
+    runs-on: ubuntu-latest
+    name: Build and Push Docker Image
+    needs:
+      - backend
+      - frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/backend_app:latest ./back-end
+
+      - name: Push Docker Image
+        run: docker push ghcr.io/${{ github.repository_owner }}/backend_app:latest
