@@ -106,3 +106,9 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ghcr.io/${{ github.repository_owner }}/backend_app:latest
+
+      - name: Build Docker Image Front-End
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/frontend_app:latest ./front-end
+
+      - name: Push Docker Image Front-End
+        run: docker push ghcr.io/${{ github.repository_owner }}/frontend_app:latest
