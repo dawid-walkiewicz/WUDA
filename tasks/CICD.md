@@ -3,7 +3,7 @@
 - [x] performs vulnerability scan for the code
 - [x] performs code linting
 - [x] performs tests under tests subdirectory inside of `front-end` and `back-end` directories
-- [ ] builds docker image and sends it to the Github Container Registry
+- [x] builds docker image and sends it to the Github Container Registry
 2. Configure Github Container Registry to use with the CI/CD
 - follow documentation
 - store credentials in github secrets
