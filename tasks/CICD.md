@@ -1,6 +1,6 @@
 # CI/CD Pipeline
 1. Configure CI/CD pipeline that performs given tasks:
-- [ ] performs vulnerability scan for the code
+- [x] performs vulnerability scan for the code
 - [x] performs code linting
 - [x] performs tests under tests subdirectory inside of `front-end` and `back-end` directories
 - [ ] builds docker image and sends it to the Github Container Registry
