@@ -1,0 +1,46 @@
+name: Python Pipeline
+on:
+  workflow_call:
+    inputs:
+        workdir:
+            required: true
+            type: string
+    secrets:
+        GITHUB_TOKEN:
+            required: true
+        ENV_SECRETS:
+            required: false
+
+jobs:
+  python_ci:
+    runs-on: ubuntu-latest
+    name: Back-End
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Linting Tools
+        run: pip install flake8 black
+
+      - name: Lint
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workdir: ${{ inputs.workdir }}
+
+      - name: Code Formatting
+        run: black --check ${{ inputs.workdir }}
+
+      - name: Install Dependencies
+        run: pip install -r ${{ inputs.workdir }}/requirements.txt
+
+      - name: Install Test Dependencies
+        run: pip install -r ${{ inputs.workdir }}/requirements_test.txt
+
+      - name: Run Back-End Tests
+        env: ${{ fromJSON(secrets.ENV_SECRETS) }}
+        run: pytest -v ${{ inputs.workdir }}/test_app.py
