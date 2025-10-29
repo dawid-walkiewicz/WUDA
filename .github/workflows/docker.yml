@@ -9,8 +9,6 @@ on:
       - 'front-end/**'
       - '.github/workflows/docker.yml'
 
-  pull_request:
-
 jobs:
   docker:
     runs-on: ubuntu-latest
