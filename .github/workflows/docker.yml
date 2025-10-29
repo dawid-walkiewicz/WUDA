@@ -12,6 +12,9 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v5
 
@@ -35,14 +38,3 @@ jobs:
           context: ./front-end
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/wuda-frontend:latest
-
-      - name: Make container packages public
-        run: |
-          for pkg in wuda-backend wuda-frontend; do
-            echo "Setting visibility for $pkg..."
-            curl -sS -X PUT \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/user/packages/container/$pkg/visibility" \
-              -d '{"visibility":"public"}'
-          done
