@@ -16,7 +16,6 @@ jobs:
     with:
       workdir: "back-end"
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ENV_SECRETS: >
         {
           "JWT_KEY": "${{ secrets.JWT_KEY }}",

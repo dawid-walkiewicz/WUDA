@@ -16,7 +16,6 @@ jobs:
     with:
       workdir: "front-end"
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ENV_SECRETS: >
         {
           "SECRET_KEY": "${{ secrets.SECRET_KEY }}"
