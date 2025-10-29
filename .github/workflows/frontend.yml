@@ -5,10 +5,12 @@ on:
     paths:
       - 'front-end/**'
       - '.github/workflows/frontend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
   pull_request:
     paths:
       - 'front-end/**'
       - '.github/workflows/frontend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
 
 jobs:
   frontend:
