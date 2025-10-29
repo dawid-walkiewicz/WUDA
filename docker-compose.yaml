@@ -9,8 +9,7 @@ services:
       - 5432:5432
 
   backend:
-    build:
-      context: ./back-end
+    image: ghcr.io/dawid-walkiewicz/wuda-backend:latest
 
     container_name: backend_app
 
@@ -25,8 +24,7 @@ services:
         condition: service_started
 
   frontend:
-    build:
-      context: ./front-end
+    image: ghcr.io/dawid-walkiewicz/wuda-frontend:latest
 
     container_name: frontend_app
 
@@ -39,5 +37,3 @@ services:
     depends_on:
       backend:
         condition: service_started
-
-#    restart: on-failure:3

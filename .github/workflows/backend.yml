@@ -1,0 +1,27 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'back-end/**'
+      - '.github/workflows/backend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
+  pull_request:
+    paths:
+      - 'back-end/**'
+      - '.github/workflows/backend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
+
+jobs:
+  backend:
+    uses: ./.github/workflows/python_pipeline.yml
+    with:
+      workdir: "back-end"
+    secrets:
+      ENV_SECRETS: >
+        {
+          "JWT_KEY": "${{ secrets.JWT_KEY }}",
+          "POSTGRES_DB": "${{ secrets.POSTGRES_DB }}",
+          "POSTGRES_USER": "${{ secrets.POSTGRES_USER }}",
+          "POSTGRES_PASSWORD": "${{ secrets.POSTGRES_PASSWORD }}"
+        }

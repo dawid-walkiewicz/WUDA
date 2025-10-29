@@ -1,0 +1,24 @@
+name: Frontend CI
+
+on:
+  push:
+    paths:
+      - 'front-end/**'
+      - '.github/workflows/frontend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
+  pull_request:
+    paths:
+      - 'front-end/**'
+      - '.github/workflows/frontend_ci.yml'
+      - '.github/workflows/python_pipeline.yml'
+
+jobs:
+  frontend:
+    uses: ./.github/workflows/python_pipeline.yml
+    with:
+      workdir: "front-end"
+    secrets:
+      ENV_SECRETS: >
+        {
+          "SECRET_KEY": "${{ secrets.SECRET_KEY }}"
+        }
