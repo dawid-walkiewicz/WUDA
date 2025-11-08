@@ -30,7 +30,7 @@ jobs:
         id: chart
         run: |
           VERSION=$(grep '^version:' ./charts/wuda-app/Chart.yaml | awk '{print $2}')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "appVersion=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
