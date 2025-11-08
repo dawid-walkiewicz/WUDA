@@ -26,28 +26,22 @@ If release name contains chart name it will be used as a full name.
 {{- define "wuda-app.fullnameBackend" -}}
   {{- $nameLength := int (sub 63 8) -}}
   {{- if .Values.fullnameOverride }}
-    {{- printf "%s-backend" (.Values.fullnameOverride | trunc $nameLength | trimSuffix "-") -}}
-  {{- else }}
-    {{- $name := default .Chart.Name .Values.nameOverride -}}
-    {{- if contains $name .Release.Name }}
-      {{- printf "%s-backend" (.Release.Name | trunc $nameLength | trimSuffix "-") -}}
-    {{- else }}
-      {{- printf "%s-%s-backend" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-    {{- end }}
+    {{- .Values.fullnameOverride | trunc $nameLength | trimSuffix "-" | printf "%s-backend" -}}
+  {{- else if .Values.nameOverride }}
+    {{- .Values.nameOverride | trunc $nameLength | trimSuffix "-" | printf "%s-backend" -}}
+   {{- else }}
+    {{- .Release.Name | trunc $nameLength | trimSuffix "-" | printf "%s-backend" -}}
   {{- end }}
 {{- end }}
 
 {{- define "wuda-app.fullnameFrontend" -}}
-{{- $nameLength := int (sub 63 8) -}}
+  {{- $nameLength := int (sub 63 8) -}}
   {{- if .Values.fullnameOverride }}
-    {{- printf "%s-frontend" (.Values.fullnameOverride | trunc $nameLength | trimSuffix "-") -}}
-  {{- else }}
-    {{- $name := default .Chart.Name .Values.nameOverride -}}
-    {{- if contains $name .Release.Name }}
-      {{- printf "%s-frontend" (.Release.Name | trunc $nameLength | trimSuffix "-") -}}
-    {{- else }}
-      {{- printf "%s-%s-frontend" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-    {{- end }}
+    {{- .Values.fullnameOverride | trunc $nameLength | trimSuffix "-" | printf "%s-frontend" -}}
+  {{- else if .Values.nameOverride }}
+    {{- .Values.nameOverride | trunc $nameLength | trimSuffix "-" | printf "%s-frontend" -}}
+   {{- else }}
+    {{- .Release.Name | trunc $nameLength | trimSuffix "-" | printf "%s-frontend" -}}
   {{- end }}
 {{- end }}
 

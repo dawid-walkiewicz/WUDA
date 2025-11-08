@@ -29,3 +29,13 @@ spec:
             - name: http
               containerPort: {{ .Values.frontend.service.port }}
               protocol: TCP
+          env:
+            - name: BACKEND_HOSTNAME
+              value: {{ include "wuda-app.fullnameBackend" . }}
+            - name: BACKEND_PORT
+              value: "{{ .Values.backend.service.port }}"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.frontend.existingSecret }}
+                  key: secret_key

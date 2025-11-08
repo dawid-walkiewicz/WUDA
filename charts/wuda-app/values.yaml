@@ -1,7 +1,7 @@
-# Default values for wuda-app.
-
 nameOverride: ""
 fullnameOverride: ""
+podAnnotations: { }
+podLabels: { }
 
 backend:
   replicaCount: 1
@@ -9,7 +9,7 @@ backend:
   image:
     repository: "ghcr.io/dawid-walkiewicz/wuda-backend"
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "latest"
 
   nameOverride: ""
   fullnameOverride: ""
@@ -18,12 +18,25 @@ backend:
     type: ClusterIP
     port: 5000
 
-  config:
-    DB_HOST: ""
-    DB_PORT: "5432"
-    DB_DATABASE: ""
-    DB_USERNAME: ""
-    JWT_KEY: ""
+  # optional db configuration if postgresql is not enabled
+  database:
+    host: ""
+    port: ""
+    name: ""
+
+    # user and password
+    existingSecret: ""
+
+  jwt:
+    existingSecret: "secrets"
+
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 10
+
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 15
 
 frontend:
   replicaCount: 1
@@ -31,7 +44,7 @@ frontend:
   image:
     repository: "ghcr.io/dawid-walkiewicz/wuda-frontend"
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "latest"
 
   nameOverride: ""
   fullnameOverride: ""
@@ -40,54 +53,19 @@ frontend:
     type: ClusterIP
     port: 8000
 
-  config:
-    SECRET_KEY: ""
+  # secret_key for frontend
+  existingSecret: "secrets"
 
 postgresql:
   enabled: true
-  global:
-    postgresql:
-      auth:
-        database: "games"
-        username: "board_games"
-        password: ""
-
+  auth:
+    database: "games"
+    username: "board_games"
   primary:
     persistence:
       enabled: true
-      size: 8Gi
+      size: 4Gi
 
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: { }
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-# This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-podAnnotations: { }
-# This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels: { }
-
-podSecurityContext: { }
-# fsGroup: 2000
-
-securityContext: { }
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-# runAsUser: 1000
-
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
   className: ""
