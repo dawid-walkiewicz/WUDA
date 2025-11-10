@@ -29,8 +29,9 @@ jobs:
       - name: Extract app version from Helm chart
         id: chart
         run: |
-          VERSION=$(grep '^version:' ./charts/wuda-app/Chart.yaml | awk '{print $2}')
-          echo "appVersion=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=$(grep '^version:' charts/wuda-app/Chart.yaml | awk '{print $2}')
+          echo "appVersion=$VERSION"
+          echo "::set-output name=app_version::$VERSION"
 
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
@@ -39,7 +40,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/wuda-backend:latest
-            ghcr.io/${{ github.repository_owner }}/wuda-backend:${{ steps.chart.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/wuda-backend:${{ steps.chart.outputs.app_version }}
 
       - name: Build & Push Frontend Image
         uses: docker/build-push-action@v6
@@ -48,4 +49,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/wuda-frontend:latest
-            ghcr.io/${{ github.repository_owner }}/wuda-frontend:${{ steps.chart.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/wuda-frontend:${{ steps.chart.outputs.app_version }}
