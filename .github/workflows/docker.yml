@@ -1,6 +1,7 @@
 name: Docker Build & Push
 
 on:
+  pull_request: {}
   push:
     branches:
       - master
@@ -29,8 +30,8 @@ jobs:
       - name: Extract app version from Helm chart
         id: chart
         run: |
-          VERSION=$(grep '^version:' ./charts/wuda-app/Chart.yaml | awk '{print $2}')
-          echo "appVersion=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=$(grep '^version:' charts/wuda-app/Chart.yaml | awk '{print $2}')
+          echo "appVersion=$VERSION"
 
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
