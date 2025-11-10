@@ -8,6 +8,7 @@ on:
       - 'back-end/**'
       - 'front-end/**'
       - '.github/workflows/docker.yml'
+      - 'charts/wuda-app/**'
 
 jobs:
   docker:
@@ -25,16 +26,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract app version from Helm chart
+        id: chart
+        run: |
+          VERSION=$(grep '^version:' ./charts/wuda-app/Chart.yaml | awk '{print $2}')
+          echo "appVersion=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
         with:
           context: ./back-end
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wuda-backend:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/wuda-backend:latest
+            ghcr.io/${{ github.repository_owner }}/wuda-backend:${{ steps.chart.outputs.version }}
 
       - name: Build & Push Frontend Image
         uses: docker/build-push-action@v6
         with:
           context: ./front-end
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wuda-frontend:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/wuda-frontend:latest
+            ghcr.io/${{ github.repository_owner }}/wuda-frontend:${{ steps.chart.outputs.version }}

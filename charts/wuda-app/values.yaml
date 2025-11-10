@@ -1,0 +1,121 @@
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: { }
+podLabels: { }
+
+backend:
+  replicaCount: 1
+
+  image:
+    repository: "ghcr.io/dawid-walkiewicz/wuda-backend"
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  service:
+    type: ClusterIP
+    port: 5000
+
+  # optional db configuration if postgresql is not enabled
+  database:
+    host: ""
+    port: ""
+    name: ""
+
+    # user and password
+    existingSecret: ""
+
+  jwt:
+    existingSecret: "secrets"
+
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 10
+
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 15
+
+frontend:
+  replicaCount: 1
+
+  image:
+    repository: "ghcr.io/dawid-walkiewicz/wuda-frontend"
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  service:
+    type: ClusterIP
+    port: 8000
+
+  # secret_key for frontend
+  existingSecret: "secrets"
+
+postgresql:
+  enabled: true
+  auth:
+    database: "games"
+    username: "board_games"
+  primary:
+    persistence:
+      enabled: true
+      size: 4Gi
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: { }
+    # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: [ ]
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: { }
+  # Which Gateways this Route is attached to.
+  parentRefs:
+    - name: gateway
+      sectionName: http
+      # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+    - chart-example.local
+  # List of rules and filters applied.
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2

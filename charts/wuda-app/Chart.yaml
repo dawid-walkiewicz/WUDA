@@ -1,0 +1,12 @@
+apiVersion: v2
+name: wuda-app
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+
+dependencies:
+  - name: postgresql
+    repository: "https://charts.bitnami.com/bitnami"
+    version: "18.1.3"
+    condition: postgresql.enabled

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "wuda-app.fullnameBackend" . }}-test-connection"
+  labels:
+    {{- include "wuda-app.labelsBackend" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "wuda-app.fullnameBackend" . }}:{{ .Values.backend.service.port }}']
+  restartPolicy: Never
