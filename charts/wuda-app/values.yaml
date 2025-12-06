@@ -29,7 +29,6 @@ backend:
 
   jwt:
     existingSecret: "secrets"
-    secret: "jakas_bardzo_tajna_wartosc"
 
   livenessProbe:
     initialDelaySeconds: 15
@@ -56,7 +55,6 @@ frontend:
 
   # secret_key for frontend
   existingSecret: "secrets"
-  secretKey: "jakas_inna_tajna_wartosc"
 
 postgresql:
   enabled: true
@@ -79,7 +77,7 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-          serviceName: wuda-app-frontend
+
   tls:
   #  - secretName: chart-example-tls
       #- hosts:
