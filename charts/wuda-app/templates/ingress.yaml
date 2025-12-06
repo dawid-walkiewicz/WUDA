@@ -36,7 +36,7 @@ spec:
             backend:
               service:
                 # kierujemy ruch na serwis frontendu, który nasłuchuje na porcie 8000
-                name: {{ include "wuda-app.fullname" $ }}-frontend
+                name: wuda-frontend
                 port:
                   number: {{ $.Values.frontend.service.port }}
           {{- end }}
