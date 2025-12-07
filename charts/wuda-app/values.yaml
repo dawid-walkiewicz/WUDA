@@ -65,6 +65,8 @@ postgresql:
     persistence:
       enabled: true
       size: 4Gi
+    pdb:
+      create: false
 
 ingress:
   enabled: false
