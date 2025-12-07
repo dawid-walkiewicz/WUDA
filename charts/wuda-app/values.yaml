@@ -67,7 +67,7 @@ postgresql:
       size: 4Gi
 
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   annotations:
    kubernetes.io/ingress.class: nginx
@@ -83,28 +83,20 @@ ingress:
       #- hosts:
        # - wuda.local
 
-# -- Expose the service via gateway-api HTTPRoute
-# Requires Gateway API resources and suitable controller installed within the cluster
-# (see: https://gateway-api.sigs.k8s.io/guides/)
 httpRoute:
-  # HTTPRoute enabled.
-  enabled: false
-  # HTTPRoute annotations.
+  enabled: true
   annotations: { }
-  # Which Gateways this Route is attached to.
   parentRefs:
-    - name: gateway
-      sectionName: http
-      # namespace: default
-  # Hostnames matching HTTP header.
+    - name: wuda-ext
+      namespace: gateway-api
+      sectionName: https
   hostnames:
-    - chart-example.local
-  # List of rules and filters applied.
+    - dawmat.vizards.it
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /headers
+#    - matches:
+#        - path:
+#            type: PathPrefix
+#            value: /headers
   #   filters:
   #   - type: RequestHeaderModifier
   #     requestHeaderModifier:

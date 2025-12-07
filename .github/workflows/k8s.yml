@@ -29,5 +29,5 @@ jobs:
         env:
           KUBECONFIG: ${{ github.workspace }}/kubeconfig
         run: |
-          helm upgrade --install wuda charts/wuda-app --atomic --wait
+          helm upgrade --install wuda charts/wuda-app --rollback-on-failure
           rm -f ${{ github.workspace }}/kubeconfig
