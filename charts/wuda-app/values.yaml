@@ -50,7 +50,7 @@ frontend:
   fullnameOverride: ""
 
   service:
-    type: ClusterIP
+    type: NodePort
     port: 8000
 
   # secret_key for frontend
@@ -68,42 +68,35 @@ postgresql:
 
 ingress:
   enabled: false
-  className: ""
-  annotations: { }
-    # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+  className: "nginx"
+  annotations:
+   kubernetes.io/ingress.class: nginx
+   #kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: wuda.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
-  tls: [ ]
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+          pathType: Prefix
 
-# -- Expose the service via gateway-api HTTPRoute
-# Requires Gateway API resources and suitable controller installed within the cluster
-# (see: https://gateway-api.sigs.k8s.io/guides/)
+  tls:
+  #  - secretName: chart-example-tls
+      #- hosts:
+       # - wuda.local
+
 httpRoute:
-  # HTTPRoute enabled.
-  enabled: false
-  # HTTPRoute annotations.
+  enabled: true
   annotations: { }
-  # Which Gateways this Route is attached to.
   parentRefs:
-    - name: gateway
-      sectionName: http
-      # namespace: default
-  # Hostnames matching HTTP header.
+    - name: wuda-ext
+      namespace: gateway-api
+      sectionName: https
   hostnames:
-    - chart-example.local
-  # List of rules and filters applied.
+    - dawmat.vizards.it
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /headers
+#    - matches:
+#        - path:
+#            type: PathPrefix
+#            value: /headers
   #   filters:
   #   - type: RequestHeaderModifier
   #     requestHeaderModifier:
